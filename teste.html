@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Consumir um endpoint</title>
+</head>
+
+<body>
+    <p> Empresa <input type="text" id="empresa" /> </p>
+    <p> Quantidade de curso: <input type="text" id="quantidadeCursos" /> </p>
+    <p> Ativo: <input type="checkbox" id="ativo" /> </p> <input type="button" onclick="buscarInformacao()"
+        value="Buscar informação" />
+    <h2> Os curso do Douglas</h2>
+    <div class="container row" id="cursosContainer"> </div>
+</body>
+<script>    function buscarInformacao() {
+        let request = new XMLHttpRequest();
+        request.open("GET", "http://demo4377856.mockable.io/cursos");
+        request.onload = () => {
+            if (request.status == 200) {
+                let response = JSON.parse(request.response);
+                //let exemploGiulianno = response[0].nome_curso;                document.getElementById("empresa").value = response.empresa;
+                document.getElementById("quantidadeCursos").value = response.qtdCursos;
+                document.getElementById("ativo").checked = response.is_active;
+                let container = document.getElementById("cursosContainer");
+                container.innerHTML = '';
+                debugger;
+                response.cursos.map(
+
+                    function (item) {
+                        let curso = '<div class="card col-3 m-3" style="width: 18rem;">';
+                        curso += `<img src="${item.imagem}" class="card-img-top" alt="...">`;
+                        curso += '<div class="card-body">';
+                        curso += `<h5 class="card-title">${item.curso}</h5>`;
+                        curso += `<a href="#" class="btn btn-primary">${item.preco}</a>`;
+                        curso += '</div>';
+                        curso += '</div>';
+                        container.innerHTML += curso;
+                    }
+                )
+
+                console.log(response);
+            } else {
+                alert('Deu erro no consumo da API!')
+            }
+        }
+        request.send();
+    }
+</script>
+
+</html>
